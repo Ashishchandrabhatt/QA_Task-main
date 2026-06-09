@@ -1,169 +1,78 @@
-# Wallet Recharge App
+# Wallet Recharge App - Test Automation Summary
 
-A mobile recharge and wallet management application built with Laravel, React, and Inertia.js.
+* **Candidate Name:** Ashish Chandra Bhatt
+* **Automation Tool:** Playwright
+* **Application Under Test:** Wallet Recharge App
 
-## Candidate Task
+## Modules Covered
+1. Login
+2. Dashboard Navigation
+3. Mobile Recharge
 
-Your task is to:
+---
 
-- understand the application flows and features
-- identify and write the relevant test cases that should be covered
-- automate those test cases using Playwright
+## Test Scenarios Automated
 
-Candidates are expected to create their own test coverage for the application.
+### Login Module
+* Verify successful login with valid credentials
+* Verify Dashboard heading is displayed after login
 
-## Tech Stack
+### Recharge Module
+* Verify navigation to Recharge page
+* Verify Recharge page heading
+* Verify all recharge form fields are displayed
+* Verify successful recharge with valid data
+* Verify mobile number accepts only numeric values
+* Verify mobile number does not accept special characters
+* Verify mobile number length validation
+* Verify mandatory field validations
+* Verify negative amount validation
+* Verify zero amount validation
+* Verify recharge amount does not exceed wallet balance
 
-- **Backend:** Laravel 11
-- **Frontend:** React 18
-- **Bridge:** Inertia.js
-- **Database:** SQLite
-- **Styling:** Tailwind CSS
-- **Build:** Vite
-- **Testing:** Playwright
+---
 
-## Quick Start (Docker)
+## Defects Identified
 
-### Prerequisites
+### Defect 1: Mobile Number field accepts alphabets
+* **Expected:** Mobile number field should accept only numeric values.
+* **Actual:** Alphabets are accepted and recharge can proceed.
+* **Severity:** High
 
-- Docker & Docker Compose
+### Defect 2: Mobile Number field accepts special characters
+* **Expected:** Mobile number field should accept only numeric values.
+* **Actual:** Special characters are accepted and recharge can proceed.
+* **Severity:** High
 
-### Run the Application
+### Defect 3: Mobile Number field accepts more than 10 digits
+* **Expected:** Mobile number should be restricted to exactly 10 digits.
+* **Actual:** More than 10 digits are accepted.
+* **Severity:** High
 
-```bash
-docker compose up --build
-```
+### Defect 4: Mobile Number field accepts less than 10 digits
+* **Expected:** Mobile number should be exactly 10 digits.
+* **Actual:** Recharge can proceed with fewer than 10 digits.
+* **Severity:** High
 
-The app will be available at [http://localhost:8000](http://localhost:8000)
+### Defect 5: Recharge allowed with ₹0 amount
+* **Expected:** System should display validation error such as "Amount must be greater than 0".
+* **Actual:** Recharge is processed successfully and displays: "Recharge of ₹0 successful!"
+* **Severity:** Medium
 
-That's it. No PHP, no Node.js, no Composer required on your machine.
+### Defect 6: Recharge allowed with amount greater than available wallet balance
+* **Expected:** Recharge should be blocked and an "Insufficient wallet balance" message should be displayed.
+* **Actual:** Recharge is processed successfully even when recharge amount exceeds the available wallet balance.
+* **Severity:** Critical
 
-### Reset Database
+### Defect 7: Wallet balance becomes negative after recharge
+* **Expected:** Wallet balance should never become negative. Recharge should be prevented when balance is insufficient.
+* **Actual:** Recharge is allowed beyond available balance, causing wallet balance to become negative.
+* **Severity:** Critical
 
-To reset the database with fresh seed data:
-```bash
-docker compose down -v
-docker compose up --build
-```
+---
 
-## Manual Setup (without Docker)
+## Execution Result
+Automated test suite executed using Playwright. Several validation tests intentionally fail due to defects identified in the application.
 
-### Prerequisites
-
-- PHP 8.2+
-- Composer
-- Node.js 18+
-- npm
-
-### Installation
-
-```bash
-composer install
-npm install
-touch database/database.sqlite
-php artisan migrate --seed
-```
-
-Run in two terminals:
-```bash
-php artisan serve
-```
-```bash
-npm run dev
-```
-
-Open [http://localhost:8000](http://localhost:8000)
-
-## Test Credentials
-
-| User | Mobile | Password |
-|------|--------|----------|
-| Rahul Sharma | 9876543210 | password123 |
-| Priya Patel | 9123456789 | password123 |
-
-## Features
-
-- **Login** - Mobile number + password authentication
-- **Dashboard** - Wallet balance, recent transactions, quick actions
-- **Mobile Recharge** - Recharge any mobile number with operator selection
-- **Transaction History** - View all transactions with status filters
-- **Profile** - View and edit user profile
-
-## API Endpoints
-
-The application exposes API-style endpoints for testing:
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/recharge | Submit a recharge |
-| GET | /api/transactions | List transactions |
-| GET | /api/transactions/{id} | View single transaction |
-| GET | /api/balance | Check wallet balance |
-
-All API endpoints require authentication (session cookie).
-
-## Running Playwright Tests
-
-### Install Playwright (first time only)
-
-```bash
-npm install
-npx playwright install chromium
-```
-
-### Run Tests
-
-```bash
-# Make sure the app is running (docker compose up OR manual setup)
-
-# Run all tests headless
-npm test
-
-# Run tests with browser visible
-npm run test:headed
-
-# Run tests with Playwright UI
-npm run test:ui
-
-# View test report after run
-npm run test:report
-```
-
-### Writing Tests
-
-Candidates should create their Playwright test files in `tests/e2e/`.
-
-The expectation is to define the scenarios worth testing and automate those scenarios using Playwright. Focus on the critical application flows such as authentication, dashboard behavior, wallet recharge, transactions, and profile management.
-
-Create test files in `tests/e2e/` following the Playwright test format:
-
-```javascript
-import { test, expect } from '@playwright/test';
-
-test.describe('Feature Name', () => {
-    test('should do something', async ({ page }) => {
-        await page.goto('/some-page');
-        await expect(page.locator('selector')).toBeVisible();
-    });
-});
-```
-
-## Project Structure
-
-```
-app/
-  Http/Controllers/    - Request handlers
-  Models/              - Eloquent models
-config/                - Application configuration
-database/
-  migrations/          - Database schema
-  seeders/             - Test data
-resources/
-  js/Pages/            - React page components
-  js/Layouts/          - Layout components
-  views/               - Blade templates
-routes/web.php         - Route definitions
-tests/e2e/             - Playwright test files
-playwright.config.js   - Playwright configuration
-docker-compose.yml     - Docker setup
-```
+## Remarks
+The application core flow is functional; however, critical validation and business rule issues were identified in the Recharge module.
