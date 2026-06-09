@@ -1,0 +1,11 @@
+vendor/
+node_modules/
+.git/
+database/database.sqlite
+storage/logs/*.log
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/cache/data/*
+public/build/
+tests/results/
+playwright-report/
